@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const templatePath = path.resolve(__dirname, '../public/og-image-template.html');
-const outputPath = path.resolve(__dirname, '../public/og-image.png');
+const outputPath = path.resolve(__dirname, '../public/og-image.jpg');
 
 function findChrome() {
   if (process.platform === 'win32') {
@@ -89,8 +89,8 @@ async function generateOgImage() {
   try {
     const page = await browser.newPage();
     
-    // Set viewport to 1024x1024
-    await page.setViewport({ width: 1024, height: 1024 });
+    // Set viewport to 1200x630 (aspect ratio 1.91:1)
+    await page.setViewport({ width: 1200, height: 630 });
     
     console.log(`Loading template: ${fileUrl}`);
     await page.goto(fileUrl, { waitUntil: 'load' });
@@ -104,8 +104,8 @@ async function generateOgImage() {
     console.log('Capturing screenshot...');
     await page.screenshot({
       path: outputPath,
-      type: 'png',
-      omitBackground: false
+      type: 'jpeg',
+      quality: 90
     });
 
     console.log(`Successfully generated Open Graph image at: ${outputPath}`);
