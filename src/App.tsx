@@ -11,7 +11,7 @@ import {
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
 import './App.css'
-import { playStrudelSource, stopStrudel } from './strudelPlayer'
+import { loadStrudel, playStrudelSource, stopStrudel } from './strudelPlayer'
 
 type Track = {
   id: string
@@ -173,6 +173,8 @@ function App() {
   useEffect(
     () => () => {
       stopStrudel()
+      // Pre-load strudel for faster track playback
+      loadStrudel().then(() => console.log('loaded strudel'))
       isSwitchingTrackRef.current = false
       recordOnDeckRef.current = false
       if (switchTimeout.current) {

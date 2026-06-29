@@ -2,7 +2,7 @@ let strudelPromise: Promise<typeof import('@strudel/web/web.mjs')> | undefined
 let soundfontsPromise: Promise<typeof import('@strudel/soundfonts')> | undefined
 let initPromise: Promise<unknown> | undefined
 
-const loadStrudel = () => {
+export const loadStrudel = () => {
   strudelPromise ??= import('@strudel/web/web.mjs')
   return strudelPromise
 }
