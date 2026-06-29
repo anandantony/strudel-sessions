@@ -11,7 +11,7 @@ import {
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
 import './App.css'
-import { loadStrudel, playStrudelSource, stopStrudel } from './strudelPlayer'
+import { playStrudelSource, stopStrudel } from './strudelPlayer'
 
 type Track = {
   id: string
@@ -33,22 +33,50 @@ type TrackArt = {
 
 const publicAsset = (path: string) => `${import.meta.env.BASE_URL}${path}`
 
+const secondsToMMSS = (seconds: number) => {
+  const minutes = Math.floor(seconds / 60)
+  const remainingSeconds = Math.floor(seconds % 60)
+  const paddedMinutes = String(minutes).padStart(2, '0')
+  const paddedSeconds = String(remainingSeconds).padStart(2, '0')
+  return `${paddedMinutes}:${paddedSeconds}`
+}
+
 const tracks: Track[] = [
   {
     id: 'midnight-splice',
     title: 'Midnight Splice',
     subtitle: 'dusty tape chords over soft broken drums',
-    duration: '03:18',
+    duration: secondsToMMSS((240 / 88) * 56),
     tempo: '88 bpm',
     palette: '#e8592d',
     sourceFile: 'tracks/midnight-splice.strudel',
     replUrl: 'https://strudel.cc/',
   },
   {
+    id: 'solar-break',
+    title: 'Solar Break',
+    subtitle: 'French house with a skipping groove',
+    duration: secondsToMMSS((240 / 120) * 96),
+    tempo: '120 bpm',
+    palette: '#799e22',
+    sourceFile: 'tracks/solar-break.strudel',
+    replUrl: 'https://strudel.cc/',
+  },
+  {
+    id: 'neon-cascade',
+    title: 'Neon Cascade',
+    subtitle: 'Cyberpunk dark house with a skipping groove',
+    duration: secondsToMMSS((240 / 120) * 96),
+    tempo: '120 bpm',
+    palette: '#e8592d',
+    sourceFile: 'tracks/neon-cascade.strudel',
+    replUrl: 'https://strudel.cc/',
+  },
+  {
     id: 'oxide-bloom',
     title: 'Oxide Bloom',
     subtitle: 'warm glass pads with a small motorik pulse',
-    duration: '04:06',
+    duration: secondsToMMSS((240 / 104) * 48),
     tempo: '104 bpm',
     palette: '#2a9d8f',
     sourceFile: 'tracks/oxide-bloom.strudel',
@@ -58,22 +86,12 @@ const tracks: Track[] = [
     id: 'rewind-sun',
     title: 'Rewind Sun',
     subtitle: 'sun-faded arps and bass from the back shelf',
-    duration: '02:52',
+    duration: secondsToMMSS((240 / 96) * 48),
     tempo: '96 bpm',
     palette: '#f2b544',
     sourceFile: 'tracks/rewind-sun.strudel',
     replUrl: 'https://strudel.cc/',
-  },
-  {
-    id: 'solar',
-    title: 'Solar',
-    subtitle: 'gentle sun-faded synth pads and a skipping rhythm',
-    duration: '03:44',
-    tempo: '90 bpm',
-    palette: '#f2b544',
-    sourceFile: 'tracks/solar.strudel',
-    replUrl: 'https://strudel.cc/',
-  },
+  }
 ]
 
 const coverPatternCount = 12
@@ -173,8 +191,6 @@ function App() {
   useEffect(
     () => () => {
       stopStrudel()
-      // Pre-load strudel for faster track playback
-      loadStrudel().then(() => console.log('loaded strudel'))
       isSwitchingTrackRef.current = false
       recordOnDeckRef.current = false
       if (switchTimeout.current) {

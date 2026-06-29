@@ -1,9 +1,7 @@
-Copyright (c) 2026 Your Name.
+Copyright (c) 2026 Anand Antony.
 
-The musical compositions and Strudel source files in this directory are made
-available for personal listening, study, and non-commercial inspiration only.
+The musical compositions and Strudel source files in this directory are licensed
+under the Creative Commons Attribution-ShareAlike 4.0 International License.
 
-You may not redistribute, sell, publish, mint, claim authorship of, or use these
-works commercially without explicit written permission.
-
-Attribution is required for any permitted sharing or reference.
+To view a copy of this license, visit http://creativecommons.org/licenses/by-sa/4.0/
+or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.

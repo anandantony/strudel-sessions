@@ -1,0 +1,131 @@
+/*
+@title Solar Break
+@by Wild Denizen
+@version 1.0
+@license CC BY-SA 4.0
+*/
+
+samples('github:eddyflux/crate')
+setcpm(120/4)
+
+// SHARED BUILDERS
+
+const drums = (variation) => stack(
+  s("bd*4"),
+  s("~ cp ~ cp"),
+  variation === 'sparse'
+    ? s("hh*2").gain(0.45)
+    : n("[0 0 <1 0> 0]*4").s('hh').gain(0.6),
+  variation === 'full' || variation === 'build'
+    ? s("~ ~ ~ [~ oh]").gain(0.45)
+    : silence,
+  variation === 'full'
+    ? s("[~ rim]*2").gain(0.3).room(0.2)
+    : silence,
+  variation === 'build'
+    ? s("sd*16").gain(saw.range(0.1, 0.7).slow(8))
+    : silence
+).bank('crate')
+
+const bass = (chords, rootNote) =>
+  n("<0!3 <1 1 1 1 -1 -1 1 1>*2>*2").set(chords)
+    .voicing()
+    .slow(2)
+    .mode(rootNote)
+    .s('gm_synth_bass_2')
+    .trans("-24")
+    .clip(0.95).gain(0.9)
+
+const stabs = (chords, lo, hi) =>
+  chords.offset(-1).voicing()
+    .s('gm_electric_guitar_muted')
+    .struct("[~ x ~ x]*4").slow(2)
+    .cutoff(sine.range(lo, hi).slow(8))
+    .dist(.75)
+    .phaser(2)
+    .room(0.6).gain(0.35)
+
+const pad = (chords, cutoff) =>
+  chords.voicing()
+    .s('gm_string_ensemble_1')
+    .slow(2)
+    .lpf(cutoff || 900).room(0.7).gain(0.28)
+
+const lead = (chords, _anchor) =>
+  chords.n("[0 <4 3 <2 5>>*2](<3 5>,8)")
+    .anchor(_anchor).voicing()
+    .s('gm_muted_trumpet')
+    .segment(4).clip(rand.range(0.4, 0.8))
+    .phaser(2).room(0.5).gain(0.65)
+    .sus(.8)
+    .release(.4)
+
+const riser = () =>
+  note('a1')
+    .s('sawtooth')
+    .lpf(sine.range(100, 6000).slow(8))
+    .lpq(sine.range(2, 18).slow(6))
+    .gain(saw.range(0, 0.6).slow(8))
+    .room(0.8).ftype('24db')
+
+const withOutroFade = (pattern) =>
+  pattern.gain(saw.range(0.9, 0.2).slow(16))
+
+const S_INTRO_C  = chord("<Am7 Dm7>/2").dict('ireal')
+const S_VERSE_C  = chord("<Am7 Dm7 F7 Em7>/2").dict('ireal')
+const S_CHORUS_C = chord("<Am7 Dm7 C [Bm7b5 Em7]>").dict('ireal')
+const S_BREAK_C  = chord("<Am7 F7>/2").dict('ireal')
+
+const solar_intro = stack(
+  drums('sparse'),
+  pad(S_INTRO_C)
+).lpf(sine.range(300, 2200).slow(8))
+ .gain(saw.range(0.2, 1).slow(8))
+
+const solar_verse = stack(
+  drums('full'),
+  bass(S_VERSE_C, 'root:a1'),
+  stabs(S_VERSE_C, 500, 1800),
+  pad(S_VERSE_C)
+)
+
+const solar_build = stack(
+  drums('build'),
+  bass(S_VERSE_C, 'root:a1'),
+  stabs(S_VERSE_C, 500, 3500),
+  pad(S_VERSE_C),
+  riser()
+).lpf(sine.range(400, 8000).slow(8))
+
+const solar_chorus = stack(
+  drums('full'),
+  bass(S_CHORUS_C, 'root:a1'),
+  stabs(S_CHORUS_C, 800, 3200),
+  pad(S_CHORUS_C),
+  lead(S_CHORUS_C, 'D5')
+).gain(1.05)
+
+const solar_breakdown = stack(
+  drums('sparse'),
+  pad(S_BREAK_C, 600),
+  stabs(S_BREAK_C, 300, 900)
+).room(0.65)
+
+const solar_outro = withOutroFade(stack(
+  drums('full'),
+  bass(S_CHORUS_C, 'root:a1'),
+  stabs(S_CHORUS_C, 800, 2000),
+  pad(S_CHORUS_C)
+))
+
+arrange(
+  [8,  solar_intro],
+  [8,  solar_verse],
+  [8,  solar_build],
+  [16, solar_chorus],
+  [8,  solar_breakdown],
+  [8,  solar_verse],
+  [8,  solar_build],
+  [16, solar_chorus],
+  [16, solar_outro]
+)

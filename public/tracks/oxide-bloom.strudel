@@ -1,12 +1,71 @@
-// "Oxide Bloom" by Your Name
-// Copyright (c) 2026 Your Name.
-// Shared for listening and study only. No redistribution, resale, or false attribution.
+/*
+@title Oxide Bloom
+@by Wild Denizen
+@version 2.0
+@license CC BY-SA 4.0
+*/
 
+// 104 BPM (4 beats per cycle) mapped natively to cycles per second
 setcpm(104 / 4)
+samples('github:eddyflux/crate')
 
-stack(
-  note("<f2 c3 eb3 g2>").s("sine").slow(2).gain(0.42),
-  s("bd ~ [~ bd] ~, ~ cp ~ cp").gain(0.76),
-  n("0 2 4 7 9 7 4 2").scale("F:minor").s("square").lpf(920).delay(0.12).gain(0.23),
-  s("hh*16").gain(perlin.range(0.05, 0.18)),
+// ── 1. HARMONIC MATRICES & SECTIONAL PROGRESSIONS ────────────────
+let verseChords  = chord("<Fm7 Bbm7 Eb7 Cm7>")
+let verseBass    = note("<f2 bb1 eb2 c2>")
+
+let chorusChords = chord("<Db C7 Fm7 Ab>")
+let chorusBass   = note("<db2 c2 f2 ab1>")
+
+// ── 2. DRUM PATTERN BLUEPRINTS ──────────────────────────────────
+// Intimate, filtered intro ticking
+let ambientDrums = stack(
+  s("hh*8").gain("[0.12 0.05 0.08 0.05]*2"),
+  s("~ ~ ~ [~ oh]").gain(0.22).room(0.3)
+).bank('crate')
+
+// Full late-night house pocket with micro-timing unquantized sway
+let drivingDrums = stack(
+  s("bd ~ [~ bd] ~").gain(0.82),
+  s("~ ~ cp ~").gain(0.74).room(0.28).nudge(0.008),
+  s("hh*16").gain(perlin.range(0.08, 0.22).slow(2)),
+  s("~ ~ ~ [~ oh]").gain(0.38).room(0.4)
+).bank('crate')
+
+// ── 3. SOUND DESIGN CHANNELS & SYNTH STRINGS ────────────────────
+let buildKeys = (chords) => 
+  chords.voicing().s("gm_epiano1").gain(0.52).room(0.4)
+    .lpf(sine.range(700, 1300).slow(4))
+
+let buildPad = (chords) => 
+  chords.voicing().s("triangle").gain(0.28).room(0.92)
+    .lpf(sine.range(380, 800).slow(6))
+    .pan(perlin.range(0.1, 0.9).slow(4))
+
+let buildBass = (bassNotes) => 
+  bassNotes.s("gm_acoustic_bass").gain(0.84).lpf(80).legato(0.82)
+    .struct("<[x ~ x ~]*2 [x ~ ~ x]>/2")
+
+let buildArp = () => 
+  n("0 2 4 7 9 7 4 2").scale("F:minor").s("gm_vibraphone")
+    .gain(perlin.range(0.35, 0.55).slow(2))
+    .room(0.65).delay(0.22).delayfeedback(0.35)
+    .lpf(sine.range(800, 1800).slow(8))
+
+let buildRiser = () => 
+  s("pink").gain(saw.range(0, 0.42).slow(4)).hpf(saw.range(300, 4200).slow(4))
+    .room(0.55).mask("<0 0 0 1>/4")
+
+// ── 4. SECTION STRUCTURAL BLOCKS ────────────────────────────────
+let introSection  = stack(buildKeys(verseChords), buildPad(verseChords), buildBass(verseBass), ambientDrums)
+let verseSection  = stack(buildKeys(verseChords), buildPad(verseChords), buildBass(verseBass), drivingDrums)
+let chorusSection = stack(buildKeys(chorusChords), buildPad(chorusChords), buildBass(chorusBass), drivingDrums, buildArp(), buildRiser())
+let outroSection  = stack(buildKeys(verseChords), buildPad(verseChords))
+
+// ── 5. MASTER ARRANGEMENT TIMELINE ──────────────────────────────
+arrange(
+  [8,  introSection],   // Phase 1: Machine activation & deep sub warm-up
+  [16, verseSection],   // Phase 2: Steady head-nod 4x4 pocket locks in
+  [16, chorusSection],  // Phase 3: Dynamic chord shift & arpeggiation bloom
+  [8,  outroSection]    // Phase 4: Drums dissolve, fading out into ambient hiss
 )
+.late("[0 0.005]*2").late("[0 0.001]").size(4)

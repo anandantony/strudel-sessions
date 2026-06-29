@@ -1,12 +1,85 @@
-// "Midnight Splice" by Your Name
-// Copyright (c) 2026 Your Name.
-// Shared for listening and study only. No redistribution, resale, or false attribution.
+/*
+@title Midnight Splice
+@by Wild Denizen
+@version 3.0
+@license CC BY-SA 4.0
+*/
 
+// 88 BPM (4 beats per cycle) mapped natively to cycles per minute
 setcpm(88 / 4)
+samples('github:eddyflux/crate')
 
-stack(
-  s("bd*2, [~ sd] cp").gain(0.82),
-  s("hh*8").gain("[.18 .12 .22 .1]*2").pan(sine.range(-0.3, 0.3)),
-  note("<c2 eb2 g1 bb1>").s("sawtooth").lpf(720).gain(0.36),
-  note("c4 ~ eb4 g4 <bb4 g4>").s("triangle").delay(0.18).room(0.44).gain(0.28),
+// ── 1. HARMONIC MATRICES & SECTIONAL PROGRESSIONS ────────────────
+let verseChords  = chord("<Cm7 Cm7 Fm7 Gm7>")
+let verseBass    = note("<c2 c2 f1 g1>")
+
+let chorusChords = chord("<Ab7 Gm7 Fm7 Cm7>")
+let chorusBass   = note("<ab2 g1 f1 c2>")
+
+let bridgeChords = chord("<Fm7 Bb7 Cm7 C7>")
+let bridgeBass   = note("<f1 bb1 c2 c2>")
+
+// ── 2. DRUM PATTERN BLUEPRINTS ──────────────────────────────────
+// Minimal Intro Frame
+let ambientDrums = stack(
+  n("[0 <1 3>]*2").s("hh"),
+  s("~ ~ ~ ~ ~ ~ ~ [~ oh]").gain(0.25)
+).bank('crate')
+
+// Full Trip-Hop Pocket with loose "drunk" snare and layered clap
+let fullDrums = stack(
+  s("bd ~ ~ [~ bd] ~ ~ ~ ~").gain(0.88),
+  s("~ ~ sd ~ ~ ~ sd ~").gain(0.72).room(0.35).nudge(0.012),
+  s("~ ~ cp ~ ~ ~ ~ ~").gain(0.55).room(0.2),
+  s("hh*16").gain("[0.5 0.15 0.28 0.15 0.5 0.15 0.28 0.15]*2")
+    .pan(sine.range(0.25, 0.75).slow(4)).room(0.1),
+  s("~ ~ ~ ~ ~ ~ ~ [~ oh]").gain(0.42).room(0.3)
+).bank('crate')
+
+// ── 3. SOUND DESIGN CHANNELS & SYNTH STRINGS ────────────────────
+let buildKeys = (chords) => 
+  chords.voicing().s("gm_epiano1").gain(0.55).phaser(4).room(0.4)
+    .lpf(sine.range(650, 1250).slow(4))
+
+let buildPad = (chords) => 
+  chords.voicing().s("triangle").gain(0.24).room(0.92)
+    .lpf(sine.range(400, 850).slow(6))
+    .pan(perlin.range(0.05, 0.95).slow(4))
+
+let buildBass = (bassNotes) => 
+  bassNotes.s("gm_acoustic_bass").gain(0.80).lpf(80).legato(0.85)
+    .struct("<[x ~ ~ [~ x]]*2 [x ~ x x]>/2")
+
+let buildLead = () => 
+  note(`
+    [c4 ~ eb4 ~ g4 ~ ~ ~]
+    [~ ~ eb4 ~ g4 ~ bb4 ~]
+    [c5 ~ ~ g4 ~ eb4 ~ ~]
+    [~ ~ bb4 ~ ~ g4 eb4 ~]
+  `).s("gm_vibraphone").gain(0.32).room(0.6).delay(0.25).delayfeedback(0.4)
+
+let buildSparkle = () => 
+  note("c5 eb5 g5 bb5").struct("~ ~ ~ ~ ~ ~ ~ ~ ~ 1 ~ ~ ~ ~ ~ ~".slow(2))
+    .s("gm_celesta").gain(0.18).hpf(1800).room(0.8)
+    .pan(rand.range(-0.6, 0.6))
+
+let buildRiser = () => 
+  s("pink").gain(saw.range(0, 0.38).slow(4)).hpf(saw.range(400, 4500).slow(4))
+    .room(0.6).mask("<0 0 0 1>/4")
+
+// ── 4. MODULAR ARRANGEMENT BLOCKS ──────────────────────────────
+let introSection  = stack(buildKeys(verseChords), buildPad(verseChords), buildBass(verseBass), ambientDrums)
+let verseSection  = stack(buildKeys(verseChords), buildPad(verseChords), buildBass(verseBass), fullDrums, buildSparkle())
+let chorusSection = stack(buildKeys(chorusChords), buildPad(chorusChords), buildBass(chorusBass), fullDrums, buildLead(), buildRiser())
+let bridgeSection = stack(buildKeys(bridgeChords), buildPad(bridgeChords), buildBass(bridgeBass), ambientDrums, buildSparkle())
+let outroSection  = stack(buildKeys(verseChords), buildPad(verseChords))
+
+// ── 5. MASTER TIMELINE STITCHING ────────────────────────────────
+arrange(
+  [8,  introSection],   // Phase 1: Foundations power up
+  [16, verseSection],   // Phase 2: Groove locks in with percussion sparkle
+  [16, chorusSection],  // Phase 3: High emotional lift & melodic bloom
+  [8,  bridgeSection],  // Phase 4: Dynamic modal turnaround pocket
+  [8,  outroSection]    // Phase 5: Elements dissolve into environmental drift
 )
+.late("[0 0.01]*2").late("[0 0.01]").size(4)

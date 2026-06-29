@@ -1,12 +1,68 @@
-// "Rewind Sun" by Your Name
-// Copyright (c) 2026 Your Name.
-// Shared for listening and study only. No redistribution, resale, or false attribution.
+/*
+@title Rewind Sun
+@by Wild Denizen
+@version 2.0
+@license CC BY-SA 4.0
+*/
 
+// 96 BPM (4 beats per cycle) mapped natively to cycles per second
 setcpm(96 / 4)
+samples('github:eddyflux/crate')
 
-stack(
-  s("bd [~ bd] ~ bd, ~ sd ~ [sd cp]").gain(0.78),
-  note("a3 c4 e4 g4").s("sawtooth").fast(2).lpf(sine.range(500, 1800)).gain(0.22),
-  note("<a1 e2 g1 d2>").s("triangle").room(0.3).gain(0.34),
-  s("hh:1 ~ hh ~").gain(0.16).pan("<-.4 .4>"),
+// ── 1. HARMONIC MATRICES & PROGRESSION SHELVES ──────────────────
+let masterChords = chord("<Am7 Em7 G D>")
+let masterBass   = note("<a1 e2 g1 d2>")
+
+// A glittering, high-register cascading counterpart for the chorus
+let sunShimmer  = note("<[a4 c5 e5 g5] [e4 g4 b4 e5] [g4 b4 d5 g5] [d4 f#4 a4 d5]>")
+
+// ── 2. DRUM PATTERN BLUEPRINTS ──────────────────────────────────
+// Stripped-back, lazy intro ticks
+let ambientDrums = stack(
+  s("hh:1 ~ hh ~").gain(perlin.range(0.12, 0.24).slow(2)).pan("<-.4 .4>")
+).bank('crate')
+
+// Spiced up retro drum pocket preserving your original syncopated groove sway
+let drivingDrums = stack(
+  s("bd [~ bd] ~ bd").gain(0.80),
+  s("~ sd ~ [sd cp]").gain(0.74).room(0.25).nudge(0.008),
+  s("hh:1 ~ hh ~").gain(perlin.range(0.16, 0.32).slow(2)).pan(sine.range(-0.4, 0.4).slow(4)),
+  s("~ ~ ~ [~ oh]").gain(0.35).room(perlin.range(0.2, 0.5).slow(4))
+).bank('crate')
+
+// ── 3. SOUND DESIGN CHANNELS & SYNTH STRINGS ────────────────────
+let buildKeys = (chords) => 
+  chords.voicing().s("gm_epiano1").gain(0.54).phaser(3).room(0.4)
+    .lpf(sine.range(650, 1350).slow(4))
+
+let buildPad = (chords) => 
+  chords.voicing().s("triangle").gain(0.26).room(0.92)
+    .lpf(sine.range(400, 850).slow(6))
+    .pan(perlin.range(0.05, 0.95).slow(4))
+
+let buildBass = (bassNotes) => 
+  bassNotes.s("gm_acoustic_bass").gain(0.82).lpf(90).legato(0.85)
+    .struct("<[x ~ x ~]*2 [x ~ ~ x]>/2")
+
+let buildShimmer = (melody) =>
+  melody.s("gm_celesta").gain(0.22).hpf(1600).room(0.75)
+    .delay(0.2).delayfeedback(0.4)
+
+let buildRiser = () => 
+  s("pink").gain(saw.range(0, 0.42).slow(4)).hpf(saw.range(300, 4200).slow(4))
+    .room(0.55).mask("<0 0 0 1>/4")
+
+// ── 4. SECTION STRUCTURAL BLOCKS ────────────────────────────────
+let introSection  = stack(buildKeys(masterChords), buildPad(masterChords), buildBass(masterBass), ambientDrums)
+let verseSection  = stack(buildKeys(masterChords), buildPad(masterChords), buildBass(masterBass), drivingDrums)
+let chorusSection = stack(buildKeys(masterChords), buildPad(masterChords), buildBass(masterBass), drivingDrums, buildShimmer(sunShimmer), buildRiser())
+let outroSection  = stack(buildKeys(masterChords), buildPad(masterChords))
+
+// ── 5. MASTER ARRANGEMENT TIMELINE ──────────────────────────────
+arrange(
+  [8,  introSection],   // Phase 1: Warm ambient introduction & sub-line entry
+  [16, verseSection],   // Phase 2: Complete syncopated drum pocket locks down
+  [16, chorusSection],  // Phase 3: High-passed Celesta bloom & transitional riser swell
+  [8,  outroSection]    // Phase 4: Drums dissolve into distant environment waves
 )
+.late("[0 0.01]*4").late("[0 0.02]*2").size(4)

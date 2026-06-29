@@ -1,16 +1,14 @@
-// ═══════════════════════════════════════════════════════════════
-// @title solar & neon_cascade @by Wild Denizen
-// @version 3.3
-// ═══════════════════════════════════════════════════════════════
+/*
+@title neon_cascade
+@by Wild Denizen
+@version 3.3
+@license CC BY-SA 4.0
+*/
 
 samples('github:eddyflux/crate')
-setcps(0.5)
+setcpm(120/4)
 
-const TRACK = 'solar'   // 'solar' | 'neon_cascade'
-
-// ═══════════════════════════════════════════════════════════════
 // SHARED BUILDERS
-// ═══════════════════════════════════════════════════════════════
 
 const drums = (variation) => stack(
   s("bd*4"),
@@ -72,74 +70,6 @@ const riser = () =>
 
 const withOutroFade = (pattern) =>
   pattern.gain(saw.range(0.9, 0.2).slow(16))
-
-
-// ═══════════════════════════════════════════════════════════════
-// TRACK A: "solar" — French house
-// ═══════════════════════════════════════════════════════════════
-
-const S_INTRO_C  = chord("<Am7 Dm7>/2").dict('ireal')
-const S_VERSE_C  = chord("<Am7 Dm7 F7 Em7>/2").dict('ireal')
-const S_CHORUS_C = chord("<Am7 Dm7 C [Bm7b5 Em7]>").dict('ireal')
-const S_BREAK_C  = chord("<Am7 F7>/2").dict('ireal')
-
-const solar_intro = stack(
-  drums('sparse'),
-  pad(S_INTRO_C)
-).lpf(sine.range(300, 2200).slow(8))
- .gain(saw.range(0.2, 1).slow(8))
-
-const solar_verse = stack(
-  drums('full'),
-  bass(S_VERSE_C, 'root:a1'),
-  stabs(S_VERSE_C, 500, 1800),
-  pad(S_VERSE_C)
-)
-
-const solar_build = stack(
-  drums('build'),
-  bass(S_VERSE_C, 'root:a1'),
-  stabs(S_VERSE_C, 500, 3500),
-  pad(S_VERSE_C),
-  riser()
-).lpf(sine.range(400, 8000).slow(8))
-
-const solar_chorus = stack(
-  drums('full'),
-  bass(S_CHORUS_C, 'root:a1'),
-  stabs(S_CHORUS_C, 800, 3200),
-  pad(S_CHORUS_C),
-  lead(S_CHORUS_C, 'D5')
-).gain(1.05)
-
-const solar_breakdown = stack(
-  drums('sparse'),
-  pad(S_BREAK_C, 600),
-  stabs(S_BREAK_C, 300, 900)
-).room(0.65)
-
-const solar_outro = withOutroFade(stack(
-  drums('full'),
-  bass(S_CHORUS_C, 'root:a1'),
-  stabs(S_CHORUS_C, 800, 2000),
-  pad(S_CHORUS_C)
-))
-
-const solar = arrange(
-  [8,  solar_intro],
-  [8,  solar_verse],
-  [8,  solar_build],
-  [16, solar_chorus],
-  [8,  solar_breakdown],
-  [8,  solar_verse],
-  [8,  solar_build],
-  [16, solar_chorus],
-  [16, solar_outro]
-)
-
-// ═══════════════════════════════════════════════════════════════
-// TRACK B: "neon_cascade" — Cyberpunk dark house
-// ═══════════════════════════════════════════════════════════════
 
 const N_INTRO_C  = chord("<Cm9 Ab^7>/4").dict('ireal')
 const N_VERSE_C  = chord("<Cm9 Ab^7 Eb^7 Bb7>/4").dict('ireal')
@@ -240,7 +170,7 @@ const neon_outro = withOutroFade(stack(
   cyberStabs(N_CHORUS_C, 600, 1800)
 ))
 
-const neon_cascade = arrange(
+arrange(
   [8,  neon_intro],
   [8,  neon_verse],
   [8,  neon_build],
@@ -251,10 +181,3 @@ const neon_cascade = arrange(
   [16, neon_chorus],
   [16, neon_outro]
 )
-
-
-// ═══════════════════════════════════════════════════════════════
-// OUTPUT
-// ═══════════════════════════════════════════════════════════════
-
-TRACK === 'solar' ? solar : neon_cascade
