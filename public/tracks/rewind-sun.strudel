@@ -1,0 +1,12 @@
+// "Rewind Sun" by Your Name
+// Copyright (c) 2026 Your Name.
+// Shared for listening and study only. No redistribution, resale, or false attribution.
+
+setcpm(96 / 4)
+
+stack(
+  s("bd [~ bd] ~ bd, ~ sd ~ [sd cp]").gain(0.78),
+  note("a3 c4 e4 g4").s("sawtooth").fast(2).lpf(sine.range(500, 1800)).gain(0.22),
+  note("<a1 e2 g1 d2>").s("triangle").room(0.3).gain(0.34),
+  s("hh:1 ~ hh ~").gain(0.16).pan("<-.4 .4>"),
+)

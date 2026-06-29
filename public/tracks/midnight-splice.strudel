@@ -1,0 +1,12 @@
+// "Midnight Splice" by Your Name
+// Copyright (c) 2026 Your Name.
+// Shared for listening and study only. No redistribution, resale, or false attribution.
+
+setcpm(88 / 4)
+
+stack(
+  s("bd*2, [~ sd] cp").gain(0.82),
+  s("hh*8").gain("[.18 .12 .22 .1]*2").pan(sine.range(-0.3, 0.3)),
+  note("<c2 eb2 g1 bb1>").s("sawtooth").lpf(720).gain(0.36),
+  note("c4 ~ eb4 g4 <bb4 g4>").s("triangle").delay(0.18).room(0.44).gain(0.28),
+)

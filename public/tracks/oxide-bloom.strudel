@@ -1,0 +1,12 @@
+// "Oxide Bloom" by Your Name
+// Copyright (c) 2026 Your Name.
+// Shared for listening and study only. No redistribution, resale, or false attribution.
+
+setcpm(104 / 4)
+
+stack(
+  note("<f2 c3 eb3 g2>").s("sine").slow(2).gain(0.42),
+  s("bd ~ [~ bd] ~, ~ cp ~ cp").gain(0.76),
+  n("0 2 4 7 9 7 4 2").scale("F:minor").s("square").lpf(920).delay(0.12).gain(0.23),
+  s("hh*16").gain(perlin.range(0.05, 0.18)),
+)

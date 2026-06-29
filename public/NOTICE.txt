@@ -1,0 +1,13 @@
+Strudel Showcase
+
+This site is a showcase that uses Strudel-compatible source files as creative
+input. It is not a Strudel fork, extension, or official Strudel project.
+
+The browser player imports @strudel/web and @strudel/soundfonts, which are
+distributed under AGPL-3.0-or-later.
+
+Strudel repository: https://codeberg.org/uzu/strudel
+Strudel website: https://strudel.cc/
+
+The musical works and Strudel source files under public/tracks are separately
+licensed. See /tracks/LICENSE.txt in the deployed site.

@@ -1,0 +1,9 @@
+Copyright (c) 2026 Your Name.
+
+The musical compositions and Strudel source files in this directory are made
+available for personal listening, study, and non-commercial inspiration only.
+
+You may not redistribute, sell, publish, mint, claim authorship of, or use these
+works commercially without explicit written permission.
+
+Attribution is required for any permitted sharing or reference.
