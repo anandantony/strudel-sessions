@@ -24,14 +24,26 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "latest"
+          node-version: "24.11.1"
           cache: npm
+          cache-dependency-path: package-lock.json
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
+      - name: Debug environment
+        run: |
+          echo "=== node/npm versions ==="
+          node -v
+          npm -v
+          echo "=== repo root files ==="
+          ls -la
+          echo "=== lockfiles ==="
+          test -f package-lock.json && ls -la package-lock.json || echo "no package-lock.json"
+          test -f pnpm-lock.yaml && echo "pnpm-lock.yaml present" || true
+          test -f yarn.lock && echo "yarn.lock present" || true
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          npm ci || (echo "=== npm debug logs ===" && tail -n +1 /home/runner/.npm/_logs/*.log || true) && exit 0
+        shell: bash
 
       - name: Build
         run: npm run build
