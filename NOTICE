@@ -1,6 +1,6 @@
-Strudel Showcase
+Strudel Sessions
 
-This site is a showcase that uses Strudel-compatible source files as creative
+This site is a session player that uses Strudel-compatible source files as creative
 input. It is not a Strudel fork, extension, or official Strudel project.
 
 The browser player imports @strudel/web and @strudel/soundfonts, which are

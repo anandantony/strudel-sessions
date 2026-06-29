@@ -1,6 +1,6 @@
-# Strudel Showcase
+# Strudel Sessions
 
-A retro music showcase for Strudel-based pieces, designed for static hosting on
+A retro-modern player and interactive archive for Strudel-based live-coded music, designed for static hosting on
 GitHub Pages.
 
 The app is a Vite + React + TypeScript showcase with a cassette/vinyl carousel,
@@ -26,7 +26,7 @@ npm run preview
 - Bootstrap frameworks with their official create commands.
 - Add new npm dependencies with the `@latest` tag unless a compatibility reason
   requires a pinned version.
-- Keep showcase application licensing separate from musical work licensing.
+- Keep application licensing separate from musical work licensing.
 - Keep track source files under `public/tracks` so the deployed player can load
   them as static assets.
 - Strudel playback is lazy-loaded on first play through `@strudel/web`.
@@ -37,7 +37,7 @@ npm run preview
 
 ## Licensing
 
-The showcase application code is intended for AGPL-3.0-or-later distribution.
+The application code is intended for AGPL-3.0-or-later distribution.
 Replace the placeholder `LICENSE` file with the full license text before
 publishing.
 

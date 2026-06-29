@@ -1,11 +1,12 @@
 {
-  "name": "strudel",
+  "name": "strudel-sessions",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build:og": "node scripts/generate-og.js",
+    "build": "npm run build:og && tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview"
   },
@@ -22,6 +23,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.2",
     "oxlint": "^1.69.0",
+    "puppeteer-core": "^25.2.1",
     "typescript": "~6.0.2",
     "vite": "^8.1.0"
   }
