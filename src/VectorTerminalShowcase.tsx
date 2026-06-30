@@ -14,6 +14,12 @@ const updateSystemVolume = (vol: number) => {
   void setStrudelVolume(vol)
 }
 
+const DIAL_RIDGE_COUNT = 26
+const DIAL_RIDGE_SPACING = 6
+const DIAL_RIDGE_TRAVEL = DIAL_RIDGE_COUNT * DIAL_RIDGE_SPACING
+
+const wrapDialOffset = (value: number) => ((value % DIAL_RIDGE_TRAVEL) + DIAL_RIDGE_TRAVEL) % DIAL_RIDGE_TRAVEL
+
 const formatCode = (source: string) => {
   if (!source) return <span>// NO SOURCE LOADED</span>
   
@@ -203,8 +209,12 @@ function VectorTerminalShowcase({ machine }: VectorTerminalShowcaseProps) {
     if (!isDraggingRef.current) return
     const deltaY = e.clientY - lastYRef.current
     lastYRef.current = e.clientY
-    
-    setDialRotation((prev) => (prev + deltaY * 1.5) % 360)
+
+    applyDialDelta(deltaY)
+  }
+
+  const applyDialDelta = (deltaY: number) => {
+    setDialRotation((prev) => wrapDialOffset(prev + deltaY * 1.5))
     setVolume((prev) => {
       const next = Math.max(0, Math.min(1, prev - deltaY * 0.012))
       updateSystemVolume(next)
@@ -223,6 +233,12 @@ function VectorTerminalShowcase({ machine }: VectorTerminalShowcaseProps) {
         console.warn(err)
       }
     }
+  }
+
+  const handleDialWheel = (e: React.WheelEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    applyDialDelta(Math.max(-5, Math.min(5, e.deltaY)))
   }
 
   const handleLoadCard = (index: number) => {
@@ -405,15 +421,16 @@ function VectorTerminalShowcase({ machine }: VectorTerminalShowcaseProps) {
             onPointerMove={handleDialPointerMove}
             onPointerUp={handleDialPointerUp}
             onPointerCancel={handleDialPointerUp}
+            onWheel={handleDialWheel}
             aria-label="Volume dial wheel"
           >
-            {Array.from({ length: 15 }).map((_, idx) => {
-              const rotatedOffset = (idx * 9 + dialRotation) % 135
+            {Array.from({ length: DIAL_RIDGE_COUNT }).map((_, idx) => {
+              const ridgeTop = wrapDialOffset(idx * DIAL_RIDGE_SPACING + dialRotation) - DIAL_RIDGE_SPACING
               return (
                 <div
                   key={idx}
                   className="dial-ridge"
-                  style={{ transform: `translateY(${rotatedOffset - 10}px)` }}
+                  style={{ top: `${ridgeTop}px` }}
                 />
               )
             })}
