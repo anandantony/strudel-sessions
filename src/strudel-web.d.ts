@@ -12,3 +12,14 @@ declare module '@strudel/web/web.mjs' {
 declare module '@strudel/soundfonts' {
   export function registerSoundfonts(): void
 }
+
+declare module 'superdough' {
+  export const analysers: Record<number, AnalyserNode | undefined>
+  export function getAnalyzerData(type?: 'time' | 'frequency', id?: number): Float32Array
+  export function getSuperdoughAudioController(): {
+    audioContext: AudioContext
+    output: {
+      destinationGain: GainNode | null
+    }
+  }
+}

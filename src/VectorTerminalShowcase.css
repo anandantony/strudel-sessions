@@ -1,0 +1,849 @@
+/* Strudel Terminal Stylesheet */
+
+:root {
+  --terminal-bg: #121416;
+  --terminal-metal: linear-gradient(
+    135deg,
+    #a8aeb2 0%,
+    #767d82 50%,
+    #5d6367 100%
+  );
+  --terminal-metal-dark: linear-gradient(
+    135deg,
+    #5a5f62 0%,
+    #3e4244 50%,
+    #2f3234 100%
+  );
+  --epaper-bg: #d4ded0;
+  --epaper-text: #1d251c;
+  --neon-cyan: #4df0e2;
+  --neon-green: #39e64c;
+  --neon-orange: #ff7f24;
+  --gold-contact: linear-gradient(90deg, #d4af37, #f3e5ab, #aa7c11);
+}
+
+.terminal-showcase-container {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  align-items: center;
+  width: 100%;
+  min-height: 0;
+  flex: 1;
+  color: #e5e9f0;
+  padding: 20px 40px 64px;
+  box-sizing: border-box;
+  font-family: "Courier New", Courier, monospace;
+  overflow: visible;
+}
+
+.page-layout {
+  min-height: 100svh;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--terminal-bg);
+  background-image:
+    radial-gradient(
+      circle at 30% 20%,
+      rgba(77, 240, 226, 0.05) 0%,
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 80% 70%,
+      rgba(255, 127, 36, 0.05) 0%,
+      transparent 40%
+    ),
+    linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
+  background-size:
+    100% 100%,
+    100% 100%,
+    32px 32px,
+    32px 32px;
+  overflow: auto;
+}
+
+.page-header {
+  flex: 0 0 auto;
+  padding: 22px 40px 0;
+  text-align: center;
+  pointer-events: none;
+}
+
+.page-title {
+  margin: 0;
+  color: #f4e6d8;
+  font-family: "Rubik 80s Fade", "Arial Black", system-ui, sans-serif;
+  font-size: clamp(2.1rem, 6vw, 5.8rem);
+  font-weight: 400;
+  line-height: 0.86;
+  text-transform: uppercase;
+  text-shadow:
+    0 0 22px rgba(77, 240, 226, 0.18),
+    0 10px 34px rgba(0, 0, 0, 0.6);
+}
+
+.page-subtitle {
+  margin: 8px 0 0;
+  color: rgba(229, 233, 240, 0.62);
+  font-family: "Courier New", Courier, monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* Left Card Organizer Shelf */
+.card-organizer-shelf {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 260px;
+  background: rgba(30, 34, 38, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+
+.library-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.shelf-title {
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: #88929a;
+  text-align: center;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 6px;
+}
+
+.sleeve-container {
+  position: relative;
+  height: 260px;
+  margin-bottom: -220px; /* Overlaps slots vertically */
+  overflow: hidden; /* Clips card bottoms behind slots */
+  perspective: 600px;
+  pointer-events: none;
+}
+
+.sleeve-container:last-child {
+  margin-bottom: 0; /* Excludes last item from shrunken boundaries */
+}
+
+.card-sleeve-slot {
+  width: 100%;
+  height: 24px;
+  background: #17191b;
+  border: 1px solid #2d3135;
+  border-bottom-color: #0b0c0d;
+  border-radius: 4px;
+  box-shadow:
+    inset 0 3px 6px rgba(0, 0, 0, 0.8),
+    0 1px 2px rgba(255, 255, 255, 0.05);
+  position: absolute;
+  bottom: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* Code Card styling */
+.code-card {
+  width: 180px;
+  height: 260px;
+  background: rgba(59, 62, 65, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  box-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  position: absolute;
+  bottom: 8px;
+  left: 20px;
+  z-index: 5;
+  transition:
+    transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+    box-shadow 0.3s;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+  pointer-events: auto;
+}
+
+.code-card:hover:not(.active-card) {
+  transform: translateY(-24px) rotateY(-4deg);
+  box-shadow:
+    0 15px 30px rgba(0, 0, 0, 0.6),
+    0 0 10px rgba(77, 240, 226, 0.2);
+}
+
+.card-organizer-shelf .code-card {
+  transform: translateY(150px);
+}
+
+.card-organizer-shelf .code-card:hover {
+  transform: translateY(0px) rotateY(-4deg);
+  z-index: 25;
+}
+
+.code-card.active-card {
+  border-color: var(--neon-cyan);
+  bottom: 0;
+  left: 0;
+  cursor: default;
+}
+
+/* Premium retro-modern card detailing */
+.card-magnetic-stripe {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 16px;
+  background: #141618;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.card-punched-holes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: absolute;
+  right: 12px;
+  top: 20px;
+  bottom: 20px;
+  justify-content: space-between;
+}
+
+.punch-hole {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.7);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.08);
+}
+
+.card-cut-corner {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  width: 24px;
+  height: 24px;
+  background: var(--terminal-bg);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  transform: rotate(45deg);
+  z-index: 6;
+}
+
+/* Specific cut corner inside slot */
+.inserted-card-container .card-cut-corner {
+  background: #090a0b;
+}
+
+.card-contact-pads {
+  display: flex;
+  gap: 4px;
+  padding: 10px;
+  margin-left: 20px;
+}
+
+.contact-pad {
+  width: 14px;
+  height: 22px;
+  background: var(--gold-contact);
+  border-radius: 1px;
+}
+
+.card-chip {
+  width: 28px;
+  height: 28px;
+  background: #18191b;
+  border: 1px solid #3c3e41;
+  border-radius: 4px;
+  margin: 15px auto 15px 40px;
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.card-chip::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  right: 4px;
+  bottom: 4px;
+  border: 1px solid #ffd700;
+  border-radius: 2px;
+  opacity: 0.7;
+}
+
+.card-metadata {
+  text-align: left;
+  font-size: 8px;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.4;
+  margin-left: 24px;
+  margin-top: -10px;
+}
+
+.card-title {
+  font-size: 11px;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  margin-left: 24px;
+  margin-top: 20px;
+  text-align: left;
+}
+
+.card-art-area {
+  margin: 15px auto 15px 24px;
+  width: 120px;
+  height: 80px;
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  position: relative;
+  opacity: 0.75;
+}
+
+/* Center Console Terminal Wrapper */
+.terminal-device-wrapper {
+  position: relative;
+  width: 440px;
+  height: 520px;
+  flex-shrink: 0;
+}
+
+/* Vertical card insertion slide container (from top) */
+.inserted-card-container {
+  position: absolute;
+  top: -240px; /* Start completely off casing at top */
+  left: 50%;
+  transform: translateX(-50%) rotate(0deg);
+  width: 180px;
+  height: 260px;
+  z-index: 2; /* Sandwiched behind front casing face, in front of code drawer */
+  transition: transform 0.85s cubic-bezier(0.19, 1, 0.22, 1);
+  pointer-events: none;
+}
+
+.inserted-card-container.slotted {
+  transform: translate(-50%, 180px) rotate(180deg); /* Slides down and rotates 180deg so gold pins insert inward */
+}
+
+/* Strudel Terminal Device Casing */
+.terminal-device-casing {
+  width: 440px;
+  height: 520px; /* Slimmer, compact layout now that card window is removed */
+  background: var(--terminal-metal);
+  border: 4px solid #ccd2d6;
+  border-radius: 24px;
+  box-shadow:
+    0 30px 60px rgba(0, 0, 0, 0.65),
+    inset 0 4px 6px rgba(255, 255, 255, 0.4),
+    inset 0 -4px 6px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 3; /* Render in front of slotted card and code drawer */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 24px;
+  box-sizing: border-box;
+}
+
+/* Matte LCD Screen Container */
+.terminal-screen-bezel {
+  width: 100%;
+  height: 240px;
+  background: #25282a;
+  border: 3px solid #5a5f62;
+  border-radius: 12px;
+  box-shadow:
+    inset 0 6px 12px rgba(0, 0, 0, 0.8),
+    0 1px 2px rgba(255, 255, 255, 0.1);
+  padding: 8px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-top: 15px;
+}
+
+.terminal-matte-screen {
+  width: 100%;
+  height: 100%;
+  background-color: var(--epaper-bg);
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.02) 1px, transparent 1px),
+    radial-gradient(circle, rgba(0, 0, 0, 0.01) 12%, transparent 12%);
+  background-size:
+    100% 4px,
+    6px 6px;
+  border-radius: 6px;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+  padding: 12px;
+  box-sizing: border-box;
+  color: var(--epaper-text);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* Screen overlay glare effect */
+.terminal-matte-screen::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.01) 30%,
+    transparent 31%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.screen-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  border-bottom: 1.5px solid rgba(29, 37, 28, 0.15);
+  padding-bottom: 4px;
+}
+
+.screen-body {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 6px 0;
+}
+
+.screen-track-title {
+  font-size: 20px;
+  font-weight: 900;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.screen-waveform-canvas {
+  width: 100%;
+  height: 60px;
+  opacity: 0.85;
+}
+
+.screen-footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  border-top: 1.5px solid rgba(29, 37, 28, 0.15);
+  padding-top: 4px;
+}
+
+/* Top-Edge Reader Slot */
+.terminal-card-slot-bezel {
+  position: absolute;
+  top: -14px;
+  left: 95px;
+  width: 250px;
+  height: 14px;
+  background: #1c1e20;
+  border: 2px solid #5a5f62;
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  box-shadow: 0 -3px 6px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 12px;
+  box-sizing: border-box;
+  align-items: center;
+}
+
+.terminal-card-slot-opening {
+  width: 210px;
+  height: 4px;
+  background: #090a0a;
+  border-radius: 1px;
+  position: absolute;
+  top: 5px;
+  left: 20px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 1);
+}
+
+.reader-led {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #ff3a2d;
+  box-shadow: 0 0 4px #ff3a2d;
+  transition:
+    background 0.3s,
+    box-shadow 0.3s;
+  z-index: 12;
+}
+
+.reader-led.card-loaded {
+  background: var(--neon-cyan);
+  box-shadow: 0 0 6px var(--neon-cyan);
+}
+
+/* Massive Side Dial Wheel */
+.side-dial-bezel {
+  position: absolute;
+  right: -32px;
+  top: 190px;
+  width: 32px;
+  height: 140px;
+  background: #25282a;
+  border: 2px solid #5a5f62;
+  border-left: none;
+  border-radius: 0 16px 16px 0;
+  box-shadow: 5px 8px 15px rgba(0, 0, 0, 0.4);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+}
+
+.side-dial-wheel {
+  width: 26px;
+  height: 126px;
+  background: var(--terminal-metal-dark);
+  border-radius: 0 10px 10px 0;
+  box-shadow:
+    inset 0 10px 20px rgba(255, 255, 255, 0.1),
+    inset 0 -10px 20px rgba(0, 0, 0, 0.5),
+    3px 2px 5px rgba(0, 0, 0, 0.5);
+  cursor: ns-resize;
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+}
+
+.dial-ridge {
+  height: 3px;
+  background: rgba(0, 0, 0, 0.4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 5px;
+}
+
+/* Lower Controls Area */
+.terminal-controls-area {
+  width: 100%;
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  user-select: none;
+}
+
+/* Flush Push Buttons Row */
+.tactile-buttons-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  background: rgba(20, 22, 24, 0.3);
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.5);
+  box-sizing: border-box;
+}
+
+.tactile-button {
+  flex-grow: 1;
+  margin: 0 4px;
+  height: 46px;
+  background: var(--terminal-metal-dark);
+  border: 1px solid #232527;
+  border-top-color: #53585b;
+  border-radius: 6px;
+  color: #8a9296;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  box-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  transition:
+    transform 0.1s,
+    box-shadow 0.1s,
+    color 0.1s;
+}
+
+.tactile-button:hover:not(:disabled) {
+  color: #fff;
+  background: linear-gradient(135deg, #6c7276 0%, #4a4e51 50%, #3b3e40 100%);
+}
+
+.tactile-button:active:not(:disabled),
+.tactile-button.active-button {
+  transform: translateY(2px);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.6),
+    inset 0 3px 5px rgba(0, 0, 0, 0.6);
+  color: var(--neon-cyan);
+}
+
+.tactile-button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Sockets panel at the bottom */
+.sockets-panel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 2px solid #5a5f62;
+  padding-top: 16px;
+}
+
+.headphone-socket {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.headphone-jack-hole {
+  width: 22px;
+  height: 22px;
+  background: radial-gradient(circle, #0e0f10 30%, #464b4e 70%, #838a8e 100%);
+  border-radius: 50%;
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.8),
+    0 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+.socket-label {
+  font-size: 10px;
+  color: #8c9296;
+}
+
+.status-indicator-leds {
+  display: flex;
+  gap: 8px;
+}
+
+.status-led {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #3a3f42;
+}
+
+.status-led.led-green.active {
+  background: var(--neon-green);
+  box-shadow: 0 0 6px var(--neon-green);
+}
+
+.status-led.led-orange.active {
+  background: var(--neon-orange);
+  box-shadow: 0 0 6px var(--neon-orange);
+}
+
+/* Code Screen Drawer - Slides down out of the bottom of the device casing (CD Tray) */
+.live-code-drawer {
+  position: absolute;
+  bottom: 0;
+  left: 20px;
+  width: 400px;
+  height: 270px;
+  background: #17181c;
+  border: 4px solid #ccd2d6;
+  border-top: none;
+  border-radius: 0 0 16px 16px;
+  padding: 12px;
+  box-sizing: border-box;
+  box-shadow:
+    0 15px 30px rgba(0, 0, 0, 0.6),
+    inset 0 -2px 4px rgba(255, 255, 255, 0.15);
+  z-index: 1; /* Layered behind the main terminal casing and card */
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transform: translateY(-20px);
+  pointer-events: none;
+  transition:
+    transform 0.6s cubic-bezier(0.19, 1, 0.22, 1),
+    opacity 0.3s;
+}
+
+.live-code-drawer.open-drawer {
+  opacity: 1;
+  transform: translateY(270px); /* Slides down out of the bottom */
+  pointer-events: auto;
+}
+
+.drawer-header {
+  font-size: 11px;
+  color: #8a9296;
+  letter-spacing: 1px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 6px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.code-editor-viewport {
+  flex-grow: 1;
+  background: #1a2523;
+  border: 1px solid #23252c;
+  border-radius: 8px;
+  padding: 12px;
+  font-family: monospace;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #7dffc2;
+  overflow-y: auto;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.85);
+  white-space: pre-wrap;
+  text-shadow: #00ff59 0px 0px 8px;
+}
+
+.code-keyword {
+  color: #c792ea;
+}
+.code-function {
+  color: #82aaff;
+}
+.code-number {
+  color: #f78c6c;
+}
+.code-comment {
+  color: #676e95;
+  font-style: italic;
+}
+
+/* Mobile Adaptations */
+@media (max-width: 1080px) {
+  .terminal-showcase-container {
+    flex-direction: column;
+    height: auto;
+    gap: 30px;
+    padding: 20px;
+    align-items: center;
+    overflow-y: auto;
+  }
+
+  .card-organizer-shelf {
+    width: 100%;
+    height: 190px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .library-grid {
+    flex-direction: row;
+    gap: 12px;
+    width: 100%;
+    height: 100%;
+  }
+
+  .sleeve-container {
+    flex-shrink: 0;
+    width: 110px;
+    height: 150px;
+    margin-bottom: 0;
+    overflow: hidden;
+  }
+
+  .card-organizer-shelf .code-card {
+    width: 100px;
+    height: 144px;
+    left: 5px;
+    bottom: 6px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    transform: translateY(90px);
+  }
+  .card-organizer-shelf .code-card:hover {
+    transform: translateY(0px);
+    z-index: 25;
+  }
+  .card-organizer-shelf .card-sleeve-slot {
+    height: 16px;
+    bottom: 0;
+  }
+  .card-organizer-shelf .card-cut-corner {
+    width: 14px;
+    height: 14px;
+    top: -7px;
+    right: -7px;
+  }
+  .card-organizer-shelf .card-chip {
+    width: 16px;
+    height: 16px;
+    margin: 6px auto;
+  }
+  .card-organizer-shelf .card-chip::before {
+    top: 2px;
+    left: 2px;
+    right: 2px;
+    bottom: 2px;
+  }
+  .card-organizer-shelf .card-title {
+    font-size: 8px;
+    margin-top: 10px;
+  }
+  .card-organizer-shelf .card-art-area {
+    width: 70px;
+    height: 44px;
+    margin: 6px auto;
+  }
+  .card-organizer-shelf .card-metadata {
+    font-size: 7px;
+    margin-top: 4px;
+    line-height: 1.2;
+  }
+  .card-organizer-shelf .contact-pad {
+    width: 8px;
+    height: 12px;
+  }
+  .card-organizer-shelf .card-contact-pads {
+    gap: 2px;
+    padding: 6px;
+  }
+}
+
+/* Scaling the central device for smaller screen widths */
+@media (max-width: 480px) {
+  .terminal-device-wrapper {
+    transform: scale(0.82);
+    transform-origin: top center;
+    margin-bottom: -90px;
+  }
+}
+
+@media (max-width: 380px) {
+  .terminal-device-wrapper {
+    transform: scale(0.72);
+    transform-origin: top center;
+    margin-bottom: -140px;
+  }
+}
